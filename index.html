@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="MindMate - A calm, thoughtful AI mental health and emotional well-being assistant.">
+    <meta name="theme-color" content="#287653" id="metaThemeColor">
+    <title>MindMate — AI Mental Health Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-layout" id="appLayout">
+
+        <!-- Mobile Backdrop Overlay for Sidebar -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+        <!-- Chat History & Session Sidebar -->
+        <aside class="chat-sidebar" id="chatSidebar" aria-label="Conversation history">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <span class="brand-icon" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                        </svg>
+                    </span>
+                    <span class="brand-title">MindMate</span>
+                </div>
+                <button type="button" class="icon-btn sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close chat history" title="Close sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- New Chat Action -->
+            <div class="sidebar-action-wrap">
+                <button type="button" class="new-chat-btn" id="newChatBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>New Conversation</span>
+                </button>
+            </div>
+
+            <!-- Conversations List -->
+            <div class="history-container">
+                <div class="history-label">Previous Conversations</div>
+                <div class="history-list" id="historyList" role="list">
+                    <!-- Populated dynamically by script.js -->
+                </div>
+                <div class="history-empty" id="historyEmpty" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <p>No saved conversations yet</p>
+                </div>
+            </div>
+
+            <!-- Sidebar Footer Controls -->
+            <div class="sidebar-footer">
+                <button type="button" class="sidebar-btn" id="sidebarThemeBtn" title="Toggle dark/light theme">
+                    <span class="btn-icon theme-icon-slot">
+                        <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="theme-text">Light Mode</span>
+                </button>
+                <button type="button" class="sidebar-btn danger-hover" id="clearAllHistoryBtn" title="Clear all chat history">
+                    <span class="btn-icon">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </span>
+                    <span>Clear All Chats</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat Center Container -->
+        <main class="chat-container">
+
+            <!-- Chat Header -->
+            <header class="chat-header">
+                <div class="header-left">
+                    <button type="button" class="icon-btn header-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle conversation history" title="Toggle history sidebar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="bot-info">
+                        <div class="bot-avatar" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                            </svg>
+                        </div>
+                        <div class="bot-text">
+                            <h1 class="brand-heading">MindMate</h1>
+                            <p>AI Mental Health Assistant</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="online-status" aria-label="Status: Online">
+                        <span class="status-dot"></span>
+                        <span>Online</span>
+                    </div>
+
+                    <button type="button" class="icon-btn header-action-btn" id="headerNewChatBtn" aria-label="Start new chat" title="Start new chat">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+
+                    <button type="button" class="icon-btn header-action-btn" id="headerThemeBtn" aria-label="Toggle color theme" title="Toggle dark mode">
+                        <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Conversation Scroll Area -->
+            <div class="chat-area" id="chatArea" role="log" aria-live="polite">
+
+                <!-- Welcome Section -->
+                <section class="welcome-message" id="welcomeSection">
+                    <div class="welcome-icon" aria-hidden="true">
+                        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                            <line x1="9" y1="9" x2="9.01" y2="9"/>
+                            <line x1="15" y1="9" x2="15.01" y2="9"/>
+                        </svg>
+                    </div>
+                    <h2>Your mental well-being matters.</h2>
+                    <p>
+                        A calm, confidential space to talk, reflect, and explore your emotions.
+                        I'm here to listen and help you find clarity without judgment.
+                    </p>
+                </section>
+
+                <!-- Suggested Topics with Icons -->
+                <section class="suggestions" id="suggestionsSection" aria-label="Suggested conversation topics">
+                    <p class="suggestions-label">How can I support you today?</p>
+                    <div class="suggestions-grid">
+                        <button type="button" class="suggestion-btn" data-query="Understanding anxiety">
+                            <svg class="suggestion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                            </svg>
+                            <span>Understanding anxiety</span>
+                        </button>
+                        <button type="button" class="suggestion-btn" data-query="Managing stress">
+                            <svg class="suggestion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                            </svg>
+                            <span>Managing stress</span>
+                        </button>
+                        <button type="button" class="suggestion-btn" data-query="Better sleep">
+                            <svg class="suggestion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                            </svg>
+                            <span>Better sleep</span>
+                        </button>
+                        <button type="button" class="suggestion-btn" data-query="Emotional well-being">
+                            <svg class="suggestion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                            </svg>
+                            <span>Emotional well-being</span>
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Status & Voice Alert Banner -->
+            <div id="statusNotice" class="status-notice" role="status" aria-live="polite" style="display: none;">
+                <span class="notice-icon" id="noticeIcon">ℹ️</span>
+                <span class="notice-text" id="noticeText"></span>
+                <button type="button" class="notice-close" id="noticeClose" aria-label="Dismiss alert">&times;</button>
+            </div>
+
+            <!-- Chat Input Footer -->
+            <footer class="chat-footer">
+                <form class="input-container" id="chatForm" onsubmit="return false;">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Share what's on your mind..." 
+                        autocomplete="off" 
+                        aria-label="Share what's on your mind"
+                        maxlength="4000"
+                    />
+
+                    <button 
+                        type="button" 
+                        id="micButton" 
+                        class="control-btn mic-btn" 
+                        title="Voice input" 
+                        aria-label="Start voice input"
+                    >
+                        <svg class="mic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                            <line x1="12" y1="19" x2="12" y2="22"/>
+                        </svg>
+                        <span class="mic-pulse" aria-hidden="true"></span>
+                    </button>
+
+                    <button 
+                        type="submit" 
+                        id="sendButton" 
+                        class="control-btn send-btn" 
+                        title="Send message" 
+                        aria-label="Send message"
+                    >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <p class="disclaimer">
+                    MindMate provides AI-guided educational support, not professional diagnosis, prescription, or clinical therapy.
+                </p>
+            </footer>
+
+        </main>
+
+    </div>
+
+    <!-- Confirmation Modal for Delete Actions -->
+    <div class="modal-overlay" id="confirmModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-box">
+            <h3 id="modalTitle">Confirm Action</h3>
+            <p id="modalMessage">Are you sure you want to proceed?</p>
+            <div class="modal-actions">
+                <button type="button" class="modal-btn secondary" id="modalCancelBtn">Cancel</button>
+                <button type="button" class="modal-btn danger" id="modalConfirmBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
